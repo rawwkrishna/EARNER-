@@ -6,177 +6,201 @@
     <title>Earner Community Hub</title>
     <style>
         * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; }
+        body { font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; overflow-x: hidden; }
 
-        /* 1. LOADING SCREEN DESIGN */
-        #loader {
-            position: fixed;
-            width: 100%; height: 100%;
-            background: #ffffff;
-            display: flex; flex-direction: column;
-            justify-content: center; align-items: center;
-            z-index: 9999;
-        }
-        .spinner {
-            width: 60px; height: 60px;
-            border: 6px solid #f3f3f3;
-            border-top: 6px solid #8e44ad;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-        .loader-text {
-            margin-top: 20px;
-            font-weight: bold;
-            color: #8e44ad;
-            letter-spacing: 2px;
-            animation: pulse 1.5s ease-in-out infinite;
-        }
-        @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
-        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.5; } }
+        /* BLACK PREMIUM LOADER */
+        #loader { position: fixed; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.4s ease; }
+        .pl { width: 6em; height: 6em; }
+        .pl__ring { animation: ring 2s linear infinite; stroke: hsla(193, 90%, 50%, 0.1); fill: none; stroke-width: 8; stroke-linecap: round; }
+        .pl__worm { animation: worm 2s cubic-bezier(0.42,0.17,0.75,0.83) infinite; stroke: #2299ff; fill: none; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 150 600; }
+        @keyframes ring { from { transform: rotate(0); } to { transform: rotate(1turn); } }
+        @keyframes worm { from { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -350; } to { stroke-dashoffset: -600; } }
+        .loader-text { margin-top: 25px; color: #ffffff; font-size: 14px; font-weight: bold; letter-spacing: 2px; }
 
-        /* Existing Styles */
+        /* STYLISH FLOATING ALERT */
+        #custom-alert { 
+            display: none; 
+            position: fixed; 
+            top: 20px; 
+            left: 50%; 
+            transform: translateX(-50%); 
+            padding: 12px 25px; 
+            border-radius: 30px; 
+            color: white; 
+            font-weight: bold; 
+            z-index: 10000; 
+            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+            text-align: center;
+            min-width: 250px;
+        }
+
         .header-section { padding: 10px; text-align: center; }
-        .header-box {
-            width: 100%; height: 110px;
-            background: linear-gradient(135deg, #6e8efb, #a777e3);
-            border-radius: 12px; display: flex; flex-direction: column;
-            justify-content: center; align-items: center; color: white;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-        }
-        .header-box h1 { font-size: 24px; margin-bottom: 5px; font-weight: 800; }
-        .header-box p { font-size: 15px; font-weight: 600; }
-
-        .top-nav {
-            display: flex; justify-content: space-around;
-            padding: 15px 0 0; border-bottom: 2px solid #eee;
-            background: white; position: sticky; top: 0; z-index: 100;
-        }
-        .nav-item { 
-            text-align: center; font-size: 14px; font-weight: bold; 
-            color: #777; flex: 1; cursor: pointer; padding-bottom: 15px;
-            border-bottom: 4px solid transparent; transition: 0.3s;
-        }
+        .header-box { width: 100%; height: 110px; background: linear-gradient(135deg, #6e8efb, #a777e3); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        
+        .top-nav { display: flex; justify-content: space-around; padding: 15px 0 0; border-bottom: 2px solid #eee; background: white; position: sticky; top: 0; z-index: 100; }
+        .nav-item { text-align: center; font-size: 14px; font-weight: bold; color: #777; flex: 1; cursor: pointer; padding-bottom: 15px; border-bottom: 4px solid transparent; }
         .nav-item.active { color: #8e44ad; border-bottom: 4px solid #8e44ad; }
-        .nav-item span { font-size: 28px; display: block; margin-bottom: 5px; }
 
         #owner-content { display: none; padding: 20px; perspective: 1000px; }
-        .flip-card { width: 100%; height: 400px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
+        .flip-card { width: 100%; height: 460px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
         .flip-card.is-flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 20px; }
-        .card-front { background: linear-gradient(180deg, #3d33ff 0%, #a233ff 100%); color: white; }
-        .card-back { transform: rotateY(180deg); background: #fdfaff; color: #333; border: 2px solid #8e44ad; }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 25px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 20px; }
+        .card-front { background: linear-gradient(180deg, #3d33ff 0%, #a233ff 100%); color: white; justify-content: center; }
+        .card-back { transform: rotateY(180deg); background: #fdfaff; border: 2px solid #8e44ad; justify-content: space-between; color: #333; }
         
-        .profile-img-wrap { position: relative; width: 140px; height: 140px; border-radius: 50%; border: 4px solid #ffcc00; padding: 5px; margin-bottom: 15px; background: white; }
+        .profile-img-wrap { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #ffcc00; padding: 5px; margin-bottom: 15px; background: white; }
         .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .badge { position: absolute; bottom: 5px; right: 10px; background: #ffcc00; color: #333; width: 35px; height: 35px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: bold; border: 2px solid white; }
-        .gradient-text { background: linear-gradient(to right, #ffffff, #ffcc00); -webkit-background-clip: text; -webkit-text-fill-color: transparent; font-weight: 900; }
+        .magic-label { margin-top: 20px; font-size: 11px; font-weight: 600; padding: 8px 15px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; animation: float 2s infinite; }
+        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
 
-        /* Highlighted Quote Style */
-        .warrior-quote {
-            margin-top: 20px;
-            font-size: 13px;
-            color: #555;
-            font-style: italic;
-            background: #f0ebff;
-            padding: 8px 15px;
-            border-radius: 15px;
-            border-left: 4px solid #8e44ad;
-        }
+        .earning-box { background: #111; padding: 30px 10px; border-radius: 20px; text-align: center; width: 100%; border: 2.5px solid #ffcc00; }
+        #count { font-size: 55px; font-weight: 900; color: #ffcc00; }
 
         .main-grid { display: flex; flex-wrap: wrap; padding: 15px 8px; justify-content: space-between; }
-        .link-card { width: 48%; border: 2px solid #007bff; border-radius: 12px; margin-bottom: 12px; padding: 15px 5px; text-align: center; background: #fff; }
-        #alert-box { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); background: #28a745; color: white; padding: 12px 20px; border-radius: 25px; font-weight: bold; z-index: 10000; width: 80%; text-align: center; }
+        .link-card { width: 48%; border: 2.5px solid #007bff; border-radius: 12px; margin-bottom: 12px; padding: 15px 5px; text-align: center; background: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; user-select: none; }
+        .link-card:active { transform: scale(0.92); background: #eef6ff; }
     </style>
 </head>
-<body onload="hideLoader()">
+<body>
 
     <div id="loader">
-        <div class="spinner"></div>
-        <div class="loader-text">TEAM WARRIOR...</div>
+        <svg class="pl" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+            <circle class="pl__ring" cx="64" cy="64" r="57" />
+            <circle class="pl__worm" cx="64" cy="64" r="57" />
+        </svg>
+        <div class="loader-text">TEAM WARRIOR [ᴛᴡ]</div>
     </div>
 
-    <div id="alert-box">Copied! ✅</div>
+    <div id="custom-alert"></div>
 
     <div class="header-section">
-        <div class="header-box">
-            <h1>Earner Community</h1>
-            <p>TEAM WARRIOR [ᴛᴡ]</p>
-        </div>
+        <div class="header-box"><h1>Earner Community</h1><p>TEAM WARRIOR [ᴛᴡ]</p></div>
     </div>
 
     <div class="top-nav">
         <div class="nav-item active" onclick="showTab('process', this)"><span>‣</span>Process Video</div>
-        <div class="nav-item" onclick="showTab('owner', this)"><span>♛</span>𓆰Owner𓆪</div>
+        <div id="owner-tab" class="nav-item" onclick="showTab('owner', this)"><span>♛</span>𓆰Owner𓆪</div>
         <div class="nav-item" onclick="showTab('trade', this)"><span>☣</span>Trade Video</div>
     </div>
 
     <div id="owner-content">
-        <div class="flip-card" onclick="this.classList.toggle('is-flipped')">
+        <div class="flip-card" onclick="flipAndCount(this)">
             <div class="card-face card-front">
-                <div class="profile-img-wrap">
-                    <img src="https://i.ibb.co/x8fkt55V/photo.jpg" class="profile-img">
-                    <div class="badge">1</div>
-                </div>
-                <h2 class="gradient-text">𝗞𝗥𝗜𝗦𝗛𝗡𝗔 𝗬𝗔𝗗𝗔𝗩 [𝐓𝐖]</h2>
-                <p style="font-size: 13px; font-weight: 600;">Admin & Founder</p>
-                <p class="designation gradient-text">TEAM WARRIOR [ᴛᴡ]</p>
+                <div class="profile-img-wrap"><img src="https://i.ibb.co/x8fkt55V/photo.jpg" class="profile-img"></div>
+                <h2 style="font-weight:900; color: white;">𝗞𝗥𝗜𝗦𝗛𝗡𝗔 𝗬𝗔𝗗𝗔𝗩</h2>
+                <p style="color: white;">Admin & Founder</p><p style="color:#ffcc00;">TEAM WARRIOR [ᴛᴡ]</p>
+                <div class="magic-label">Tap to see magic ↻</div>
             </div>
             <div class="card-face card-back">
-                <h3 style="margin-bottom: 15px; color: #8e44ad;">Contact Me</h3>
-                <a href="https://wa.link/bwdttd" style="background:#25d366; color:white; padding:12px 25px; border-radius:30px; text-decoration:none; font-weight:bold; font-size: 14px;">WhatsApp Official</a>
-                
-                <div class="warrior-quote">
-                    "A Warrior doesn't fight because he hates what is in front of him, but because he loves what is behind him."
+                <div class="earning-box">
+                    <span style="color:#fff; font-size:12px; font-weight:800;">🏆 TOTAL EARNING REVEALED</span>
+                    <div style="color:#ffcc00; font-family:Arial Black; font-size:55px;">₹<span id="count">0</span></div>
                 </div>
-                
-                <p style="margin-top: 15px; font-size: 11px; color: #999;">Tap to go back ↻</p>
+                <div style="font-size:12px; font-style:italic; background:#f0ebff; padding:12px; border-radius:15px; border-left:5px solid #8e44ad; text-align:center;">"A Warrior doesn't fight because he hates what is in front of him, but because he loves what is behind him."</div>
+                <a href="https://wa.link/bwdttd" style="background:#25d366; color:white; padding:15px; border-radius:30px; text-decoration:none; font-weight:bold; width:100%; text-align:center;">WhatsApp Official</a>
             </div>
         </div>
     </div>
 
     <div id="apps-content">
         <div style="padding: 15px 15px 0; font-size: 16px; font-weight: bold; color: #444;" id="section-title">Process Video Links:</div>
-        <div class="main-grid">
-            <script>
-                const apps = ["𝐀𝐍𝐆𝐄𝐋 𝐎𝐍𝐄", "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", "𝐔𝐏𝐒𝐓𝐎𝐂Ｋ", "𝐀𝐃𝐈𝐓𝐘𝐀 𝐁𝐈𝐑𝐋𝐀", "𝐌𝐎𝐓𝐈𝐋𝐀𝐋 𝐎𝐒𝐖𝐀𝐋", "𝐄𝐐𝐔𝐈𝐓𝐘 𝐁𝐀ΝΚ", "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀𝐍𝐊", "𝐓𝐈𝐃𝐄", "𝐁𝐀𝐉𝐀𝐉 𝐂𝐀𝐑𝐃", "𝐀𝐗𝐈𝐒 𝐌𝐅", "𝐒𝐓𝐎𝐑𝐘 𝐓𝐕", "𝟓 𝐏𝐀𝐈𝐒𝐀", "𝐇𝐒𝐁𝐂𝐌𝐅"];
-                apps.forEach(app => {
-                    document.write(`<div class="link-card" onclick="copyText('${app}')"><span>${app}</span><svg width="18" fill="#007bff" viewBox="0 0 24 24" style="margin-top:5px;"><path d="M16 1H4v14h2V3h12V1zm3 4H8v14h11V7z"/></svg></div>`);
-                });
-            </script>
-        </div>
+        <div class="main-grid" id="links-grid"></div>
     </div>
 
     <script>
-        function hideLoader() {
-            const loader = document.getElementById('loader');
-            loader.style.transition = "opacity 0.5s ease";
-            loader.style.opacity = "0";
-            setTimeout(() => { loader.style.display = "none"; }, 500);
+        // FAST LOADER
+        window.onload = () => {
+            setTimeout(() => { 
+                const loader = document.getElementById('loader');
+                loader.style.opacity = '0';
+                setTimeout(() => { loader.style.display = 'none'; }, 400);
+            }, 1500);
+        };
+
+        const appsData = [
+            { name: "𝐀𝐍𝐆𝐄𝐋 𝐎𝐍𝐄", p: "https://tinyurl.com/earnercommunity-angelone", t: "https://tinyurl.com/earnercommunity-angel-trade" },
+            { name: "𝐀𝐗𝐈𝐒 𝐌𝐅", p: "https://tinyurl.com/earnercommunity-axismf1", t: "https://tinyurl.com/earnercommunity-axismf" },
+            { name: "𝐓𝐈𝐃𝐄", p: "https://tinyurl.com/EarnerCommunity-tide", t: "https://tinyurl.com/EarnerCommunity-tide" },
+            { name: "𝐀𝐃𝐈𝐓𝐘𝐀 𝐁𝐈𝐑𝐋𝐀", p: "https://youtu.be/fl_o8a8pcGM", t: "https://drive.google.com/file/d/1UArx_WhdtDJNz0O-GO7Q6ppI4FIfh1zU/view?usp=drivesdk" },
+            { name: "𝐔𝐏𝐒𝐓𝐎𝐂Ｋ", p: "https://tinyurl.com/earnercommunity-upstox", t: "NO" },
+            { name: "𝐌𝐒𝐓𝐎𝐂𝐊", p: "https://tinyurl.com/earnercommunity-mstock", t: "NO" },
+            { name: "𝐄𝐐𝐔𝐈𝐓𝐘 𝐁𝐀ΝΚ", p: "https://earnercommunitylinks.blogspot.com/p/equitas_5.html", t: "NO" },
+            { name: "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", p: "NO", t: "https://tinyurl.com/Earnercommunity-ibulls" },
+            { name: "𝐊𝐎𝐓𝐀𝐊", p: "NO", t: "https://tinyurl.com/earnercommunity-kotak" },
+            { name: "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀ΝΚ", p: "NO", t: "NO" },
+            { name: "𝟓 𝐏𝐀𝐈𝐒𝐀", p: "NO", t: "NO" },
+            { name: "𝐇𝐒𝐁𝐂𝐌𝐅", p: "NO", t: "NO" }
+        ];
+
+        function showAlert(msg, isError = false) {
+            const alertBox = document.getElementById('custom-alert');
+            alertBox.innerText = msg;
+            alertBox.style.background = isError ? "#dc3545" : "#28a745";
+            alertBox.style.display = "block";
+            setTimeout(() => { alertBox.style.display = "none"; }, 2000);
         }
 
-        function showTab(type, element) {
-            document.querySelectorAll('.nav-item').forEach(item => item.classList.remove('active'));
+        // UNIVERSAL COPY FUNCTION (100% Working)
+        function copyToClipboard(text) {
+            if (text === "NO") {
+                showAlert("❌ NOT AVAILABLE", true);
+                return;
+            }
+            const textArea = document.createElement("textarea");
+            textArea.value = text;
+            document.body.appendChild(textArea);
+            textArea.select();
+            try {
+                document.execCommand('copy');
+                showAlert("✅ Link Copied Successfully!");
+            } catch (err) {
+                console.error('Copy failed', err);
+            }
+            document.body.removeChild(textArea);
+        }
+
+        function renderApps(type) {
+            const grid = document.getElementById('links-grid');
+            grid.innerHTML = '';
+            appsData.forEach(app => {
+                const div = document.createElement('div');
+                div.className = 'link-card';
+                div.innerHTML = `<span>${app.name}</span>`;
+                const currentLink = type === 'p' ? app.p : app.t;
+                div.onclick = () => copyToClipboard(currentLink);
+                grid.appendChild(div);
+            });
+        }
+
+        function showTab(tab, element) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             element.classList.add('active');
-            const ownerDiv = document.getElementById('owner-content');
-            const appsDiv = document.getElementById('apps-content');
-            if(type === 'owner') { ownerDiv.style.display = 'block'; appsDiv.style.display = 'none'; }
-            else { 
-                ownerDiv.style.display = 'none'; appsDiv.style.display = 'block'; 
-                document.getElementById('section-title').innerText = element.innerText.replace(/[‣☣𓆰𓆪\n]/g, '').trim() + " Links:";
+            document.getElementById('owner-content').style.display = (tab === 'owner' ? 'block' : 'none');
+            document.getElementById('apps-content').style.display = (tab === 'owner' ? 'none' : 'block');
+            if(tab !== 'owner') {
+                renderApps(tab === 'process' ? 'p' : 't');
+                document.getElementById('section-title').innerText = (tab === 'process' ? 'Process Video Links:' : 'Trade Video Links:');
             }
         }
-        function copyText(name) {
-            const dummy = document.createElement("input");
-            document.body.appendChild(dummy);
-            dummy.value = "https://earner-community.com/" + name;
-            dummy.select();
-            document.execCommand("copy");
-            document.body.removeChild(dummy);
-            var alertBox = document.getElementById('alert-box');
-            alertBox.innerText = name + " Copied! ✅";
-            alertBox.style.display = "block";
-            setTimeout(() => { alertBox.style.display = "none"; }, 1500);
+
+        function flipAndCount(card) {
+            card.classList.toggle('is-flipped');
+            if (card.classList.contains('is-flipped')) {
+                const base = 4630;
+                const weekly = 980;
+                const weeks = Math.floor((new Date() - new Date('2026-02-22')) / (1000*60*60*24*7));
+                const target = base + (weeks > 0 ? weeks * weekly : 0);
+                let obj = document.getElementById("count");
+                let start = 0;
+                let timer = setInterval(() => {
+                    start += Math.ceil(target/40);
+                    if(start >= target) { start = target; clearInterval(timer); }
+                    obj.innerHTML = start.toLocaleString();
+                }, 30);
+            }
         }
+
+        renderApps('p');
     </script>
 </body>
 </html>
