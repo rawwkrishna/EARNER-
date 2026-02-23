@@ -17,7 +17,7 @@
         @keyframes worm { from { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -350; } to { stroke-dashoffset: -600; } }
         .loader-text { margin-top: 25px; color: #ffffff; font-size: 14px; font-weight: bold; letter-spacing: 2px; }
 
-        /* STYLISH FLOATING ALERT */
+        /* ALERT BOX */
         #custom-alert { 
             display: none; 
             position: fixed; 
@@ -34,9 +34,38 @@
             min-width: 250px;
         }
 
+        /* SKY BLUE DISCLAIMER BOX */
+        #disclaimer-box {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 85%;
+            max-width: 350px;
+            background: #e0f7fa;
+            border: 2px solid #00bcd4;
+            border-radius: 15px;
+            padding: 20px;
+            z-index: 10001;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            text-align: center;
+            color: #006064;
+            font-weight: bold;
+            line-height: 1.5;
+        }
+        .close-disclaimer {
+            position: absolute;
+            top: 5px;
+            right: 10px;
+            font-size: 20px;
+            cursor: pointer;
+            color: #00bcd4;
+        }
+        .highlight { color: #d32f2f; background: #ffeb3b; padding: 2px 4px; border-radius: 4px; }
+
         .header-section { padding: 10px; text-align: center; }
         .header-box { width: 100%; height: 110px; background: linear-gradient(135deg, #6e8efb, #a777e3); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; }
-        
         .top-nav { display: flex; justify-content: space-around; padding: 15px 0 0; border-bottom: 2px solid #eee; background: white; position: sticky; top: 0; z-index: 100; }
         .nav-item { text-align: center; font-size: 14px; font-weight: bold; color: #777; flex: 1; cursor: pointer; padding-bottom: 15px; border-bottom: 4px solid transparent; }
         .nav-item.active { color: #8e44ad; border-bottom: 4px solid #8e44ad; }
@@ -57,8 +86,20 @@
         #count { font-size: 55px; font-weight: 900; color: #ffcc00; }
 
         .main-grid { display: flex; flex-wrap: wrap; padding: 15px 8px; justify-content: space-between; }
-        .link-card { width: 48%; border: 2.5px solid #007bff; border-radius: 12px; margin-bottom: 12px; padding: 15px 5px; text-align: center; background: #fff; font-weight: bold; cursor: pointer; transition: 0.2s; user-select: none; }
-        .link-card:active { transform: scale(0.92); background: #eef6ff; }
+        .link-card { 
+            width: 48%; 
+            border: 2.5px solid #007bff; 
+            border-radius: 12px; 
+            margin-bottom: 12px; 
+            padding: 15px 5px; 
+            text-align: center; 
+            background: #fff; 
+            font-weight: bold; 
+            cursor: pointer; 
+            transition: all 0.2s ease; 
+            user-select: none; 
+        }
+        .link-card:active { transform: scale(0.92); background: #eef6ff; box-shadow: 0 0 12px rgba(0, 123, 255, 0.3); }
     </style>
 </head>
 <body>
@@ -72,6 +113,11 @@
     </div>
 
     <div id="custom-alert"></div>
+
+    <div id="disclaimer-box">
+        <span class="close-disclaimer" onclick="hideDisclaimer()">&times;</span>
+        Es video mai dey gay kis bhi <span class="highlight">Referral Code</span> ko na daly nhi to <span class="highlight">PAYOUT</span> nhi mily ga.
+    </div>
 
     <div class="header-section">
         <div class="header-box"><h1>Earner Community</h1><p>TEAM WARRIOR [ᴛᴡ]</p></div>
@@ -108,7 +154,6 @@
     </div>
 
     <script>
-        // FAST LOADER
         window.onload = () => {
             setTimeout(() => { 
                 const loader = document.getElementById('loader');
@@ -122,14 +167,14 @@
             { name: "𝐀𝐗𝐈𝐒 𝐌𝐅", p: "https://tinyurl.com/earnercommunity-axismf1", t: "https://tinyurl.com/earnercommunity-axismf" },
             { name: "𝐓𝐈𝐃𝐄", p: "https://tinyurl.com/EarnerCommunity-tide", t: "https://tinyurl.com/EarnerCommunity-tide" },
             { name: "𝐀𝐃𝐈𝐓𝐘𝐀 𝐁𝐈𝐑𝐋𝐀", p: "https://youtu.be/fl_o8a8pcGM", t: "https://drive.google.com/file/d/1UArx_WhdtDJNz0O-GO7Q6ppI4FIfh1zU/view?usp=drivesdk" },
-            { name: "𝐔𝐏𝐒𝐓𝐎𝐂Ｋ", p: "https://tinyurl.com/earnercommunity-upstox", t: "NO" },
-            { name: "𝐌𝐒𝐓𝐎𝐂𝐊", p: "https://tinyurl.com/earnercommunity-mstock", t: "NO" },
+            { name: "𝐔𝐏𝐒𝐓𝐎𝐂Ｋ", p: "https://tinyurl.com/earnercommunity-upstox", t: "https://youtu.be/ddEQGxsEnlQ?si=Bhn4_TsqfK8ywLxA" },
+            { name: "𝐌𝐒𝐓𝐎𝐂𝐊", p: "https://tinyurl.com/earnercommunity-mstock", t: "https://youtube.com/shorts/hJ7XMtPmqMc?si=9f3LDJo13fCApoya" },
             { name: "𝐄𝐐𝐔𝐈𝐓𝐘 𝐁𝐀ΝΚ", p: "https://earnercommunitylinks.blogspot.com/p/equitas_5.html", t: "NO" },
-            { name: "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", p: "NO", t: "https://tinyurl.com/Earnercommunity-ibulls" },
-            { name: "𝐊𝐎𝐓𝐀𝐊", p: "NO", t: "https://tinyurl.com/earnercommunity-kotak" },
-            { name: "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀ΝΚ", p: "NO", t: "NO" },
-            { name: "𝟓 𝐏𝐀𝐈𝐒𝐀", p: "NO", t: "NO" },
-            { name: "𝐇𝐒𝐁𝐂𝐌𝐅", p: "NO", t: "NO" }
+            { name: "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", p: "https://youtu.be/zD13mX65pAs", t: "https://tinyurl.com/Earnercommunity-ibulls", special: true },
+            { name: "𝐊𝐎𝐓𝐀𝐊", p: "https://youtu.be/6S8H6i-Y-pE", t: "https://tinyurl.com/earnercommunity-kotak", special: true },
+            { name: "𝟓 𝐏𝐀𝐈𝐒𝐀", p: "https://youtu.be/M_w5yN_kP3o", t: "https://youtube.com/shorts/3fKDmt-LQaU?si=mSmwLt6Onta2hm28", special: true },
+            { name: "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀ΝΚ", p: "https://youtu.be/vOQAnvA5O0k", t: "NO", special: true },
+            { name: "𝐇𝐒𝐁𝐂𝐌𝐅", p: "https://youtu.be/t2yI_C9h4eE", t: "NO", special: true }
         ];
 
         function showAlert(msg, isError = false) {
@@ -140,8 +185,17 @@
             setTimeout(() => { alertBox.style.display = "none"; }, 2000);
         }
 
-        // UNIVERSAL COPY FUNCTION (100% Working)
-        function copyToClipboard(text) {
+        function showDisclaimer() {
+            const box = document.getElementById('disclaimer-box');
+            box.style.display = 'block';
+            setTimeout(() => { hideDisclaimer(); }, 7000);
+        }
+
+        function hideDisclaimer() {
+            document.getElementById('disclaimer-box').style.display = 'none';
+        }
+
+        function copyToClipboard(text, isSpecial, tabType) {
             if (text === "NO") {
                 showAlert("❌ NOT AVAILABLE", true);
                 return;
@@ -150,13 +204,15 @@
             textArea.value = text;
             document.body.appendChild(textArea);
             textArea.select();
-            try {
-                document.execCommand('copy');
-                showAlert("✅ Link Copied Successfully!");
-            } catch (err) {
-                console.error('Copy failed', err);
-            }
+            document.execCommand('copy');
             document.body.removeChild(textArea);
+            
+            showAlert("✅ Link Copied Successfully!");
+            
+            // SHOW DISCLAIMER ONLY FOR SPECIAL APPS IN PROCESS TAB
+            if (isSpecial && tabType === 'process') {
+                setTimeout(() => { showDisclaimer(); }, 1000);
+            }
         }
 
         function renderApps(type) {
@@ -166,8 +222,8 @@
                 const div = document.createElement('div');
                 div.className = 'link-card';
                 div.innerHTML = `<span>${app.name}</span>`;
-                const currentLink = type === 'p' ? app.p : app.t;
-                div.onclick = () => copyToClipboard(currentLink);
+                const currentLink = type === 'process' ? app.p : app.t;
+                div.onclick = () => copyToClipboard(currentLink, app.special, type);
                 grid.appendChild(div);
             });
         }
@@ -178,7 +234,7 @@
             document.getElementById('owner-content').style.display = (tab === 'owner' ? 'block' : 'none');
             document.getElementById('apps-content').style.display = (tab === 'owner' ? 'none' : 'block');
             if(tab !== 'owner') {
-                renderApps(tab === 'process' ? 'p' : 't');
+                renderApps(tab);
                 document.getElementById('section-title').innerText = (tab === 'process' ? 'Process Video Links:' : 'Trade Video Links:');
             }
         }
@@ -200,7 +256,7 @@
             }
         }
 
-        renderApps('p');
+        renderApps('process');
     </script>
 </body>
 </html>
