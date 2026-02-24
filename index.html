@@ -10,7 +10,7 @@
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
         body { font-family: 'Poppins', sans-serif; background: #252432; overflow-x: hidden; }
 
-        /* --- SCREENS --- */
+        /* --- LOGIN & FORGOT SCREENS --- */
         #login-screen, #forgot-screen { position: fixed; inset: 0; background: #252432; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: 0.8s; }
         #forgot-screen { display: none; z-index: 21000; }
         
@@ -41,17 +41,27 @@
         .top-nav { display: flex; justify-content: space-around; padding: 15px 0 0; border-bottom: 2px solid #eee; background: white; position: sticky; top: 0; z-index: 100; }
         .nav-item { text-align: center; font-family: 'Ubuntu', sans-serif; font-size: 15px; font-weight: 700; color: #777; flex: 1; cursor: pointer; padding-bottom: 15px; }
         .nav-item.active { color: #8e44ad; border-bottom: 4px solid #8e44ad; }
-        #download-btn { display: none; background: #ffcc00; color: #000; padding: 10px 20px; border-radius: 30px; font-weight: bold; margin: 10px auto; border: none; cursor: pointer; font-family: 'Ubuntu'; }
+
+        /* --- OWNER CARD --- */
+        #owner-content { display: none; padding: 20px; perspective: 1000px; }
+        .flip-card { width: 100%; height: 460px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
+        .flip-card.is-flipped { transform: rotateY(180deg); }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 25px; display: flex; flex-direction: column; align-items: center; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
+        .card-front { background: linear-gradient(180deg, #3d33ff 0%, #a233ff 100%); color: white; justify-content: center; }
+        .card-back { transform: rotateY(180deg); background: #fdfaff; border: 2px solid #8e44ad; justify-content: space-between; }
+        .profile-img-wrap { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #ffcc00; padding: 5px; background: white; margin-bottom: 15px; overflow: hidden; }
+        .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
+
         .main-grid { display: flex; flex-wrap: wrap; padding: 15px 8px; justify-content: space-between; }
         .link-card { width: 48%; border: 2.5px solid #007bff; border-radius: 12px; margin-bottom: 12px; padding: 15px 5px; text-align: center; background: #fff; font-weight: bold; }
-        #disclaimer-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 350px; background: #e0f7fa; border: 2px solid #00bcd4; border-radius: 15px; padding: 20px; z-index: 30001; text-align: center; }
         #custom-alert { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 30px; color: white; z-index: 30000; font-weight: 800; }
+        #disclaimer-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 350px; background: #e0f7fa; border: 2px solid #00bcd4; border-radius: 15px; padding: 20px; z-index: 30001; text-align: center; }
     </style>
 </head>
 <body onload="checkSession()">
 
     <div id="orange-alert-box">
-        <p id="orange-msg">Sir, details fill kijiye! 😊</p>
+        <p id="orange-msg">Sir, please enter Name and 10-digit Number! 😊</p>
         <button onclick="closeOrangeAlert()">OK</button>
     </div>
 
@@ -77,9 +87,9 @@
             <div class="login">
                 <div class="loginBx">
                     <h2 style="color: #45f3ff;">Forgot Bot 🤖</h2>
-                    <input type="text" placeholder="𝘠𝘰𝘶 r 𝘕𝘢𝘮𝘦" id="forgotName">
-                    <input type="number" placeholder="𝘕𝘦𝘸 𝘕𝘶𝘮𝘣𝘦𝘳" id="forgotNum">
-                    <textarea placeholder="𝘊𝘰𝘮𝘮𝘦𝘯𝘵 (𝘞𝘩𝘺 𝘤𝘩𝘢𝘯𝘨𝘦?)" id="forgotComment"></textarea>
+                    <input type="text" placeholder="Your Name" id="forgotName">
+                    <input type="number" placeholder="New Number" id="forgotNum">
+                    <textarea placeholder="Comment (Why change?)" id="forgotComment"></textarea>
                     <input type="submit" value="𝐒𝐔𝐁𝐌𝐈𝐓" onclick="handleForgotSubmit()" style="background: #ff2770; color: white;">
                     <a href="javascript:void(0)" onclick="closeForgot()" style="color:#fff; text-decoration:none; font-size: 0.8em; margin-top: 5px;">Back to Login</a>
                 </div>
@@ -91,7 +101,7 @@
         <div id="custom-alert"></div>
         <div id="disclaimer-box">
             <span onclick="this.parentElement.style.display='none'" style="float:right; cursor:pointer;">&times;</span>
-            Es video mai dey gay kis bhi <span style="color:red; background:yellow; padding:2px;">Referral Code</span> ko na daly nhi to <b>PAYOUT</b> nhi mily ga.
+            Referral Code galti se bhi na badlein!
         </div>
         <div class="header-box"><h1>Earner Community</h1><p>TEAM WARRIOR [ᴛᴡ]</p></div>
         <div class="top-nav">
@@ -99,16 +109,54 @@
             <div class="nav-item" onclick="showTab('owner', this)">OWNER</div>
             <div class="nav-item" onclick="showTab('trade', this)">TRADE</div>
         </div>
+        
         <div id="apps-content">
-            <button id="download-btn" onclick="window.open('https://t.me/ROCKY_17_UK')">📥 VIEW BOT DATA</button>
+            <div style="padding:15px; font-weight:bold; font-family:'Ubuntu';" id="section-title">Process Video Links:</div>
             <div class="main-grid" id="links-grid"></div>
         </div>
+
+        <div id="owner-content">
+            <div class="flip-card" onclick="flipAndCount(this)">
+                <div class="card-face card-front">
+                    <div class="profile-img-wrap"><img src="https://i.ibb.co/x8fkt55V/photo.jpg" class="profile-img"></div>
+                    <h2 style="color:white; font-family:'Ubuntu';">𝗞𝗥𝗜𝗦𝗛𝗡𝗔 𝗬𝗔𝗗𝗔𝗩</h2>
+                    <p style="color:#ffcc00; font-weight:bold; font-size: 14px;">ADMIN & FOUNDER</p>
+                    <p style="color:white; font-size: 12px; margin-top: 5px;">TEAM WARRIOR [ᴛᴡ]</p>
+                    <div style="margin-top:15px; font-size:11px;">Tap to see magic ↻</div>
+                </div>
+                <div class="card-face card-back">
+                    <div style="background:#111; padding:20px; border-radius:20px; width:100%; text-align:center; border:2px solid #ffcc00;">
+                        <span style="color:#fff; font-size:10px;">TOTAL EARNING</span>
+                        <div style="color:#ffcc00; font-size:40px; font-weight:900;">₹<span id="count">0</span></div>
+                    </div>
+                    <div style="font-size:12px; font-style:italic; padding:10px; text-align:center; color: #333; line-height: 1.4;">
+                        "A Warrior doesn't fight because he hates what is in front of him, but because he loves what is behind him."
+                    </div>
+                    <a href="https://wa.link/bwdttd" style="background:#25d366; color:white; padding:12px; border-radius:25px; text-decoration:none; width:100%; text-align:center; font-weight:bold;">WhatsApp Official</a>
+                </div>
+            </div>
         </div>
+    </div>
 
     <script>
-        const BOT1 = "8699430064:AAFsODBcW2DEtgCXM0j3CHBCbhFjTO2bY3g"; // Tracker
-        const BOT2 = "8632067273:AAGsT5Ef5kPcTERzv6FOfTe3HF_Hr6IPJNY"; // Forgot
+        const BOT1 = "8699430064:AAFsODBcW2DEtgCXM0j3CHBCbhFjTO2bY3g";
+        const BOT2 = "8632067273:AAGsT5Ef5kPcTERzv6FOfTe3HF_Hr6IPJNY";
         const CHAT_ID = "6131523659";
+
+        const apps = [
+            { name: "𝐀𝐍𝐆𝐄𝐋 𝐎𝐍𝐄", p: "https://tinyurl.com/earnercommunity-angelone", t: "https://tinyurl.com/earnercommunity-angel-trade" },
+            { name: "𝐀𝐗𝐈𝐒 𝐌𝐅", p: "https://tinyurl.com/earnercommunity-axismf1", t: "https://tinyurl.com/earnercommunity-axismf" },
+            { name: "𝐓𝐈𝐃𝐄", p: "https://tinyurl.com/EarnerCommunity-tide", t: "https://tinyurl.com/EarnerCommunity-tide" },
+            { name: "𝐀𝐃𝐈𝐓𝐘𝐀 𝐁𝐈𝐑𝐋𝐀", p: "https://youtu.be/fl_o8a8pcGM", t: "https://drive.google.com/file/d/1UArx_WhdtDJNz0O-GO7Q6ppI4FIfh1zU/view?usp=drivesdk" },
+            { name: "𝐔𝐏𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-upstox", t: "https://youtu.be/ddEQGxsEnlQ?si=Bhn4_TsqfK8ywLxA" },
+            { name: "𝐌𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-mstock", t: "https://youtube.com/shorts/hJ7XMtPmqMc?si=9f3LDJo13fCApoya" },
+            { name: "𝐄𝐐𝐔𝐈𝐓𝐘 𝐁𝐀ΝΚ", p: "https://earnercommunitylinks.blogspot.com/p/equitas_5.html", t: "NO" },
+            { name: "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", p: "https://youtu.be/zD13mX65pAs", t: "https://tinyurl.com/Earnercommunity-ibulls", special: true },
+            { name: "𝐊𝐎𝐓𝐀𝐊", p: "https://youtu.be/6S8H6i-Y-pE", t: "https://tinyurl.com/earnercommunity-kotak", special: true },
+            { name: "𝟓 𝐏𝐀𝐈𝐒𝐀", p: "https://youtu.be/M_w5yN_kP3o", t: "https://youtube.com/shorts/3fKDmt-LQaU?si=mSmwLt6Onta2hm28", special: true },
+            { name: "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀ΝΚ", p: "https://youtu.be/vOQAnvA5O0k", t: "NO", special: true },
+            { name: "𝐇𝐒𝐁𝐂𝐌𝐅", p: "https://youtu.be/t2yI_C9h4eE", t: "NO", special: true }
+        ];
 
         function showAlert(msg) { document.getElementById('orange-msg').innerText = msg; document.getElementById('orange-alert-box').style.display = 'block'; }
         function closeOrangeAlert() { document.getElementById('orange-alert-box').style.display = 'none'; }
@@ -127,13 +175,12 @@
             const sNum = localStorage.getItem('lockedNum');
 
             if(name === "" || num.length !== 10) { showAlert("Sir, Name aur 10-digit Number fill kijiye! 📱"); return; }
-            if(sName && (name !== sName || num !== sNum)) { showAlert("Sir, locked data se hi login karein! 🔒"); return; }
+            if(sName && (name !== sName || num !== sNum)) { showAlert("Sir, aap sirf apne registered Name aur Number se hi login kar sakte hain! 🔒"); return; }
 
             if(!sName) { localStorage.setItem('lockedName', name); localStorage.setItem('lockedNum', num); }
             localStorage.setItem('lastLoginTime', new Date().getTime());
 
             fetch(`https://api.telegram.org/bot${BOT1}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🔑 Login: " + name + " (" + num + ")")}`);
-            if(name === "KRISHNA" && num === "9110") document.getElementById('download-btn').style.display = 'block';
             showDashboard();
         }
 
@@ -151,35 +198,17 @@
             closeForgot();
         }
 
-        const apps = [
-            { name: "𝐀𝐍𝐆𝐄𝐋 𝐎𝐍𝐄", p: "https://tinyurl.com/earnercommunity-angelone", t: "https://tinyurl.com/earnercommunity-angel-trade" },
-            { name: "𝐀𝐗𝐈𝐒 𝐌𝐅", p: "https://tinyurl.com/earnercommunity-axismf1", t: "https://tinyurl.com/earnercommunity-axismf" },
-            { name: "𝐓𝐈𝐃𝐄", p: "https://tinyurl.com/EarnerCommunity-tide", t: "https://tinyurl.com/EarnerCommunity-tide" },
-            { name: "𝐀𝐃𝐈𝐓𝐘𝐀 𝐁𝐈𝐑𝐋𝐀", p: "https://youtu.be/fl_o8a8pcGM", t: "https://drive.google.com/file/d/1UArx_WhdtDJNz0O-GO7Q6ppI4FIfh1zU/view?usp=drivesdk" },
-            { name: "𝐔𝐏𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-upstox", t: "https://youtu.be/ddEQGxsEnlQ?si=Bhn4_TsqfK8ywLxA" },
-            { name: "𝐌𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-mstock", t: "https://youtube.com/shorts/hJ7XMtPmqMc?si=9f3LDJo13fCApoya" },
-            { name: "𝐄𝐐𝐔𝐈𝐓𝐘 𝐁𝐀ΝΚ", p: "https://earnercommunitylinks.blogspot.com/p/equitas_5.html", t: "NO" },
-            { name: "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", p: "https://youtu.be/zD13mX65pAs", t: "https://tinyurl.com/Earnercommunity-ibulls", special: true },
-            { name: "𝐊𝐎𝐓𝐀𝐊", p: "https://youtu.be/6S8H6i-Y-pE", t: "https://tinyurl.com/earnercommunity-kotak", special: true },
-            { name: "𝟓 𝐏𝐀𝐈𝐒𝐀", p: "https://youtu.be/M_w5yN_kP3o", t: "https://youtube.com/shorts/3fKDmt-LQaU?si=mSmwLt6Onta2hm28", special: true },
-            { name: "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀ΝΚ", p: "https://youtu.be/vOQAnvA5O0k", t: "NO", special: true },
-            { name: "𝐇𝐒𝐁𝐂𝐌𝐅", p: "https://youtu.be/t2yI_C9h4eE", t: "NO", special: true }
-        ];
-
         function renderApps(type) {
-            const grid = document.getElementById('links-grid');
-            grid.innerHTML = '';
+            const grid = document.getElementById('links-grid'); grid.innerHTML = '';
             apps.forEach(app => {
-                const div = document.createElement('div');
-                div.className = 'link-card'; div.innerHTML = app.name;
+                const div = document.createElement('div'); div.className = 'link-card'; div.innerHTML = app.name;
                 div.onclick = () => {
                     const l = type === 'process' ? app.p : app.t;
-                    if(l === "NO") return;
-                    navigator.clipboard.writeText(l);
                     const a = document.getElementById('custom-alert');
-                    a.innerText = "✅ Copied!"; a.style.display = "block"; a.style.background = "#28a745";
-                    setTimeout(() => a.style.display = "none", 2000);
-                    if(app.special && type === 'process') document.getElementById('disclaimer-box').style.display = 'block';
+                    if(l === "NO") { a.innerText = "❌ NOT AVAILABLE"; a.style.display="block"; a.style.background="#dc3545"; setTimeout(()=>a.style.display="none", 2000); return; }
+                    navigator.clipboard.writeText(l);
+                    a.innerText = "✅ Copied!"; a.style.display="block"; a.style.background="#28a745"; setTimeout(()=>a.style.display="none", 2000);
+                    if(app.special && type === 'process') document.getElementById('disclaimer-box').style.display='block';
                 };
                 grid.appendChild(div);
             });
@@ -195,7 +224,17 @@
         function showTab(t, el) {
             document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
             el.classList.add('active');
-            renderApps(t);
+            document.getElementById('apps-content').style.display = t === 'owner' ? 'none' : 'block';
+            document.getElementById('owner-content').style.display = t === 'owner' ? 'block' : 'none';
+            if(t !== 'owner') { renderApps(t); document.getElementById('section-title').innerText = (t === 'process' ? 'Process Video Links:' : 'Trade Video Links:'); }
+        }
+
+        function flipAndCount(card) {
+            card.classList.toggle('is-flipped');
+            if(card.classList.contains('is-flipped')) {
+                let start = 0, target = 5610;
+                let timer = setInterval(() => { start += 150; if(start >= target) { start = target; clearInterval(timer); } document.getElementById('count').innerText = start.toLocaleString(); }, 30);
+            }
         }
     </script>
 </body>
