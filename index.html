@@ -208,7 +208,7 @@
             if(card.classList.contains('is-flipped')) {
                 let start = 0, target = 5610;
                 let timer = setInterval(() => {
-                    start += 000;
+                    start += 150;
                     if(start >= target) { start = target; clearInterval(timer); }
                     document.getElementById('count').innerText = start.toLocaleString();
                 }, 30);
