@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Earner Community Hub</title>
+    <title>Earner Community </title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.2/css/all.min.css">
     <style>
         @import url("https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;800&family=Ubuntu:wght@500;700&display=swap");
         * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; outline: none; }
         body { font-family: 'Poppins', sans-serif; background: #252432; overflow-x: hidden; }
 
-        /* --- LOGIN & FORGOT SCREENS --- */
+        /* --- SCREENS --- */
         #login-screen, #forgot-screen { position: fixed; inset: 0; background: #252432; display: flex; justify-content: center; align-items: center; z-index: 20000; transition: 0.8s; }
         #forgot-screen { display: none; z-index: 21000; }
         
@@ -30,17 +30,19 @@
         .loginBx textarea { border-radius: 15px; height: 60px; resize: none; }
         .loginBx input[type="submit"] { background: #45f3ff; border: none; color: #111; font-weight: bold; cursor: pointer; margin-top: 5px; }
 
-        /* --- ORANGE POPUP --- */
-        #orange-alert-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 280px; background: #ff9f43; color: #111; padding: 20px; border-radius: 15px; z-index: 30000; text-align: center; box-shadow: 0 10px 30px rgba(0,0,0,0.5); animation: popScale 0.3s ease; }
-        @keyframes popScale { from { transform: translate(-50%, -50%) scale(0.7); opacity: 0; } to { transform: translate(-50%, -50%) scale(1); opacity: 1; } }
-        #orange-alert-box button { background: #111; color: #ff9f43; border: none; padding: 8px 25px; border-radius: 10px; font-weight: bold; cursor: pointer; margin-top: 10px; }
-
         /* --- DASHBOARD --- */
         #main-dashboard { display: none; background: #ffffff; min-height: 100vh; }
         .header-box { width: 100%; height: 110px; background: linear-gradient(135deg, #6e8efb, #a777e3); display: flex; flex-direction: column; justify-content: center; align-items: center; color: white; border-radius: 0 0 15px 15px; }
         .top-nav { display: flex; justify-content: space-around; padding: 15px 0 0; border-bottom: 2px solid #eee; background: white; position: sticky; top: 0; z-index: 100; }
         .nav-item { text-align: center; font-family: 'Ubuntu', sans-serif; font-size: 15px; font-weight: 700; color: #777; flex: 1; cursor: pointer; padding-bottom: 15px; }
         .nav-item.active { color: #8e44ad; border-bottom: 4px solid #8e44ad; }
+        #custom-alert { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 30px; color: white; z-index: 30000; font-weight: 800; }
+        
+        /* --- DISCLAIMER --- */
+        #disclaimer-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 350px; background: #e0f7fa; border: 2px solid #00bcd4; border-radius: 15px; padding: 20px; z-index: 30001; text-align: left; }
+        .alert-title { color: #ff0000; font-weight: 800; font-size: 18px; text-align: center; margin-bottom: 12px; display: block; }
+        .highlight-text { background: yellow; font-weight: 900; padding: 0 3px; }
+        .bullet-point { margin-bottom: 8px; font-weight: 600; font-size: 14px; }
 
         /* --- OWNER CARD --- */
         #owner-content { display: none; padding: 20px; perspective: 1000px; }
@@ -54,16 +56,9 @@
 
         .main-grid { display: flex; flex-wrap: wrap; padding: 15px 8px; justify-content: space-between; }
         .link-card { width: 48%; border: 2.5px solid #007bff; border-radius: 12px; margin-bottom: 12px; padding: 15px 5px; text-align: center; background: #fff; font-weight: bold; }
-        #custom-alert { display: none; position: fixed; top: 20px; left: 50%; transform: translateX(-50%); padding: 12px 25px; border-radius: 30px; color: white; z-index: 30000; font-weight: 800; }
-        #disclaimer-box { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 85%; max-width: 350px; background: #e0f7fa; border: 2px solid #00bcd4; border-radius: 15px; padding: 20px; z-index: 30001; text-align: center; }
     </style>
 </head>
 <body onload="checkSession()">
-
-    <div id="orange-alert-box">
-        <p id="orange-msg">Sir, please enter Name and 10-digit Number! 😊</p>
-        <button onclick="closeOrangeAlert()">OK</button>
-    </div>
 
     <div id="login-screen">
         <div class="box">
@@ -89,7 +84,7 @@
                     <h2 style="color: #45f3ff;">Forgot Bot 🤖</h2>
                     <input type="text" placeholder="Your Name" id="forgotName">
                     <input type="number" placeholder="New Number" id="forgotNum">
-                    <textarea placeholder="Comment (Why change?)" id="forgotComment"></textarea>
+                    <textarea placeholder="Comment" id="forgotComment"></textarea>
                     <input type="submit" value="𝐒𝐔𝐁𝐌𝐈𝐓" onclick="handleForgotSubmit()" style="background: #ff2770; color: white;">
                     <a href="javascript:void(0)" onclick="closeForgot()" style="color:#fff; text-decoration:none; font-size: 0.8em; margin-top: 5px;">Back to Login</a>
                 </div>
@@ -100,9 +95,12 @@
     <div id="main-dashboard">
         <div id="custom-alert"></div>
         <div id="disclaimer-box">
-            <span onclick="this.parentElement.style.display='none'" style="float:right; cursor:pointer;">&times;</span>
-            Referral Code galti se bhi na badlein!
+            <span onclick="this.parentElement.style.display='none'" style="float:right; cursor:pointer; font-weight:bold;">&times;</span>
+            <span class="alert-title">ⓘ 𝐀𝐋𝐄𝐑𝐓</span>
+            <div class="bullet-point">• इस वीडियो मै दिया गया <span class="highlight-text">𝗥𝗘𝗙𝗘𝗥𝗥𝗔𝗟 𝗖𝗢𝗗𝗘</span> ने डाले ❌</div>
+            <div class="bullet-point">• <span class="highlight-text">APP</span> को <span class="highlight-text">Play store</span> से ना <span class="highlight-text">Download</span> करिये ❌</div>
         </div>
+
         <div class="header-box"><h1>Earner Community</h1><p>TEAM WARRIOR [ᴛᴡ]</p></div>
         <div class="top-nav">
             <div class="nav-item active" onclick="showTab('process', this)">PROCESS</div>
@@ -121,15 +119,15 @@
                     <div class="profile-img-wrap"><img src="https://i.ibb.co/x8fkt55V/photo.jpg" class="profile-img"></div>
                     <h2 style="color:white; font-family:'Ubuntu';">𝗞𝗥𝗜𝗦𝗛𝗡𝗔 𝗬𝗔𝗗𝗔𝗩</h2>
                     <p style="color:#ffcc00; font-weight:bold; font-size: 14px;">ADMIN & FOUNDER</p>
-                    <p style="color:white; font-size: 12px; margin-top: 5px;">TEAM WARRIOR [ᴛᴡ]</p>
-                    <div style="margin-top:15px; font-size:11px;">Tap to see magic ↻</div>
+                    <p style="color:white; font-size: 12px; font-weight: 800;">TEAM WARRIOR [ᴛᴡ]</p>
+                    <div style="margin-top:10px; font-size:11px;">Tap to see magic ↻</div>
                 </div>
                 <div class="card-face card-back">
                     <div style="background:#111; padding:20px; border-radius:20px; width:100%; text-align:center; border:2px solid #ffcc00;">
                         <span style="color:#fff; font-size:10px;">TOTAL EARNING</span>
                         <div style="color:#ffcc00; font-size:40px; font-weight:900;">₹<span id="count">0</span></div>
                     </div>
-                    <div style="font-size:12px; font-style:italic; padding:10px; text-align:center; color: #333; line-height: 1.4;">
+                    <div style="font-size:12px; font-style:italic; padding:10px; text-align:center; color: #333;">
                         "A Warrior doesn't fight because he hates what is in front of him, but because he loves what is behind him."
                     </div>
                     <a href="https://wa.link/bwdttd" style="background:#25d366; color:white; padding:12px; border-radius:25px; text-decoration:none; width:100%; text-align:center; font-weight:bold;">WhatsApp Official</a>
@@ -151,17 +149,13 @@
             { name: "𝐔𝐏𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-upstox", t: "https://youtu.be/ddEQGxsEnlQ?si=Bhn4_TsqfK8ywLxA" },
             { name: "𝐌𝐒𝐓𝐎ＣＫ", p: "https://tinyurl.com/earnercommunity-mstock", t: "https://youtube.com/shorts/hJ7XMtPmqMc?si=9f3LDJo13fCApoya" },
             { name: "𝐄𝐐𝐔𝐈𝐓𝐘 𝐁𝐀ΝΚ", p: "https://earnercommunitylinks.blogspot.com/p/equitas_5.html", t: "NO" },
+            { name: "𝐌𝐎𝐓𝐈𝐋𝐀𝐋 𝐎𝐖𝐒𝐀𝐋", p: "https://youtu.be/Mp1C52IEKm8?t=39&si=qQg3eSmlrnxX-CaU", t: "NO", special: true },
             { name: "𝐈𝐍𝐃𝐈𝐀 𝐁𝐔𝐋𝐋𝐒", p: "https://youtu.be/zD13mX65pAs", t: "https://tinyurl.com/Earnercommunity-ibulls", special: true },
             { name: "𝐊𝐎𝐓𝐀𝐊", p: "https://youtu.be/6S8H6i-Y-pE", t: "https://tinyurl.com/earnercommunity-kotak", special: true },
             { name: "𝟓 𝐏𝐀𝐈𝐒𝐀", p: "https://youtu.be/M_w5yN_kP3o", t: "https://youtube.com/shorts/3fKDmt-LQaU?si=mSmwLt6Onta2hm28", special: true },
             { name: "𝐀𝐈𝐑𝐓𝐄𝐋 𝐁𝐀ΝΚ", p: "https://youtu.be/vOQAnvA5O0k", t: "NO", special: true },
             { name: "𝐇𝐒𝐁𝐂𝐌𝐅", p: "https://youtu.be/t2yI_C9h4eE", t: "NO", special: true }
         ];
-
-        function showAlert(msg) { document.getElementById('orange-msg').innerText = msg; document.getElementById('orange-alert-box').style.display = 'block'; }
-        function closeOrangeAlert() { document.getElementById('orange-alert-box').style.display = 'none'; }
-        function openForgot() { document.getElementById('forgot-screen').style.display = 'flex'; }
-        function closeForgot() { document.getElementById('forgot-screen').style.display = 'none'; }
 
         function checkSession() {
             const last = localStorage.getItem('lastLoginTime');
@@ -174,13 +168,17 @@
             const sName = localStorage.getItem('lockedName');
             const sNum = localStorage.getItem('lockedNum');
 
-            if(name === "" || num.length !== 10) { showAlert("Sir, Name aur 10-digit Number fill kijiye! 📱"); return; }
-            if(sName && (name !== sName || num !== sNum)) { showAlert("Sir, aap sirf apne registered Name aur Number se hi login kar sakte hain! 🔒"); return; }
+            if(name === "" || num.length !== 10) { alert("Sir, valid 10-digit details bhariye!"); return; }
+            if(sName && (name !== sName || num !== sNum)) { alert("Sir, locked data hi use karein!"); return; }
 
             if(!sName) { localStorage.setItem('lockedName', name); localStorage.setItem('lockedNum', num); }
             localStorage.setItem('lastLoginTime', new Date().getTime());
 
-            fetch(`https://api.telegram.org/bot${BOT1}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent("🔑 Login: " + name + " (" + num + ")")}`);
+            // Bot 1 Tracker Message (Updated with Name, Number, and Time)
+            const time = new Date().toLocaleString();
+            const msg = `👤 *New Login Alert*\n\n📛 *Name:* ${name}\n📞 *Number:* ${num}\n⏰ *Time:* ${time}`;
+            fetch(`https://api.telegram.org/bot${BOT1}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&parse_mode=Markdown`);
+
             showDashboard();
         }
 
@@ -188,14 +186,14 @@
             const n = document.getElementById('forgotName').value.trim();
             const p = document.getElementById('forgotNum').value.trim();
             const c = document.getElementById('forgotComment').value.trim();
-            if(n === "" || p.length !== 10 || c === "") { showAlert("Sir, details sahi bhariye! 🤖"); return; }
-
-            const msg = `⚠️ *Forgot Request*\nName: ${n}\nNew: ${p}\nComment: ${c}`;
+            const time = new Date().toLocaleString();
+            if(n === "" || p.length !== 10) { alert("Sir, details fill kijiye!"); return; }
+            
+            const msg = `⚠️ *Forgot Request*\n\n👤 *Name:* ${n}\n📞 *New Number:* ${p}\n📝 *Comment:* ${c}\n⏰ *Time:* ${time}`;
             const keyboard = JSON.stringify({inline_keyboard: [[{text:"✅ Accept", callback_data:"acc"}, {text:"❌ Reject", callback_data:"rej"}]]});
             
             fetch(`https://api.telegram.org/bot${BOT2}/sendMessage?chat_id=${CHAT_ID}&text=${encodeURIComponent(msg)}&reply_markup=${keyboard}&parse_mode=Markdown`);
-            showAlert("Request Sent Sir! 😊");
-            closeForgot();
+            alert("Sent!"); closeForgot();
         }
 
         function renderApps(type) {
@@ -205,9 +203,9 @@
                 div.onclick = () => {
                     const l = type === 'process' ? app.p : app.t;
                     const a = document.getElementById('custom-alert');
-                    if(l === "NO") { a.innerText = "❌ NOT AVAILABLE"; a.style.display="block"; a.style.background="#dc3545"; setTimeout(()=>a.style.display="none", 2000); return; }
+                    if(l === "NO") { a.innerText = "❌ NO VIDEO"; a.style.display="block"; a.style.background="#dc3545"; setTimeout(()=>a.style.display="none", 2000); return; }
                     navigator.clipboard.writeText(l);
-                    a.innerText = "✅ Copied!"; a.style.display="block"; a.style.background="#28a745"; setTimeout(()=>a.style.display="none", 2000);
+                    a.innerText = "✅ Link Copied!"; a.style.display="block"; a.style.background="#28a745"; setTimeout(()=>a.style.display="none", 2000);
                     if(app.special && type === 'process') document.getElementById('disclaimer-box').style.display='block';
                 };
                 grid.appendChild(div);
@@ -217,7 +215,6 @@
         function showDashboard() {
             document.getElementById('login-screen').style.display = 'none';
             document.getElementById('main-dashboard').style.display = 'block';
-            document.body.style.background = "#fff";
             renderApps('process');
         }
 
@@ -226,14 +223,13 @@
             el.classList.add('active');
             document.getElementById('apps-content').style.display = t === 'owner' ? 'none' : 'block';
             document.getElementById('owner-content').style.display = t === 'owner' ? 'block' : 'none';
-            if(t !== 'owner') { renderApps(t); document.getElementById('section-title').innerText = (t === 'process' ? 'Process Video Links:' : 'Trade Video Links:'); }
+            if(t !== 'owner') { renderApps(t); document.getElementById('section-title').innerText = t === 'process' ? 'Process Video Links:' : 'Trade Video Links:'; }
         }
 
         function flipAndCount(card) {
             card.classList.toggle('is-flipped');
             if(card.classList.contains('is-flipped')) {
-                let start = 0, target = 5610;
-                let timer = setInterval(() => { start += 150; if(start >= target) { start = target; clearInterval(timer); } document.getElementById('count').innerText = start.toLocaleString(); }, 30);
+                let s = 0; let timer = setInterval(() => { s += 150; if(s >= 5610) { s = 5610; clearInterval(timer); } document.getElementById('count').innerText = s.toLocaleString(); }, 30);
             }
         }
     </script>
